@@ -11,22 +11,32 @@ import tokenManager from '../utils/tokenManager';
 //     )
 //   : 'https://heycalendar.store/api';   // 실제 배포(앱 빌드/실기기)
 
-const ENV_ORIGIN = process.env.EXPO_PUBLIC_API_ORIGIN;
-
-const isWeb = Platform.OS === 'web';
 const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
 
-const PROD_ORIGIN =
-  isWeb
-    ? (ENV_ORIGIN || (typeof window !== 'undefined' ? window.location.origin : 'https://heycalendar.store'))
-    : (ENV_ORIGIN || 'https://heycalendar.store');
+// 개발 환경과 프로덕션 환경에 따라 BASE_URL을 설정합니다.
+let BASE_URL: string;
 
+if (isDev) {
+  // 개발 환경일 경우
+  if (Platform.OS === 'android') {
+    // Android 에뮬레이터에서는 'http://10.0.2.2:8080'을 사용해 로컬 서버에 접근합니다.
+    BASE_URL = 'http://10.0.2.2:8080/api';
+  } else {
+    // iOS 시뮬레이터 및 웹에서는 'http://localhost:8080'을 사용합니다.
+    BASE_URL = 'http://localhost:8080/api';
+  }
+} else {
+  // 프로덕션 환경일 경우
+  if (Platform.OS === 'web') {
+    // 웹에서는 상대 경로를 사용하여 현재 도메인의 /api를 바라보게 합니다.
+    BASE_URL = '/api';
+  } else {
+    // 앱(iOS, Android)에서는 환경변수 또는 기본 URL을 사용합니다.
+    BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://heycalendar.store/api';
+  }
+}
 
-export const BASE_URL = isDev
-  ? (Platform.OS === 'android'
-      ? 'http://10.0.2.2:8080/api'
-      : 'http://localhost:8080/api')
-  : `${PROD_ORIGIN}/api`;
+export { BASE_URL };
 // export const BASE_URL = __DEV__
 //   ? (
 //       Platform.OS === 'android'
