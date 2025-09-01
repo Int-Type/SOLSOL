@@ -26,7 +26,7 @@
 
 | 권시온 | 김소연 | 신준호 | 정수형 |
 |:-:|:-:|:-:|:-:|
-| Leader, FrontEnd | FrontEnd | BackEnd | BackEnd |
+| Leader, FrontEnd | FrontEnd | BackEnd | BackEnd, Infra |
 
 ---
 
